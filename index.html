@@ -1,0 +1,209 @@
+<script type="text/javascript">
+        var gk_isXlsx = false;
+        var gk_xlsxFileLookup = {};
+        var gk_fileData = {};
+        function filledCell(cell) {
+          return cell !== '' && cell != null;
+        }
+        function loadFileData(filename) {
+        if (gk_isXlsx && gk_xlsxFileLookup[filename]) {
+            try {
+                var workbook = XLSX.read(gk_fileData[filename], { type: 'base64' });
+                var firstSheetName = workbook.SheetNames[0];
+                var worksheet = workbook.Sheets[firstSheetName];
+
+                // Convert sheet to JSON to filter blank rows
+                var jsonData = XLSX.utils.sheet_to_json(worksheet, { header: 1, blankrows: false, defval: '' });
+                // Filter out blank rows (rows where all cells are empty, null, or undefined)
+                var filteredData = jsonData.filter(row => row.some(filledCell));
+
+                // Heuristic to find the header row by ignoring rows with fewer filled cells than the next row
+                var headerRowIndex = filteredData.findIndex((row, index) =>
+                  row.filter(filledCell).length >= filteredData[index + 1]?.filter(filledCell).length
+                );
+                // Fallback
+                if (headerRowIndex === -1 || headerRowIndex > 25) {
+                  headerRowIndex = 0;
+                }
+
+                // Convert filtered JSON back to CSV
+                var csv = XLSX.utils.aoa_to_sheet(filteredData.slice(headerRowIndex)); // Create a new sheet from filtered array of arrays
+                csv = XLSX.utils.sheet_to_csv(csv, { header: 1 });
+                return csv;
+            } catch (e) {
+                console.error(e);
+                return "";
+            }
+        }
+        return gk_fileData[filename] || "";
+        }
+        </script><!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>OptiNexus - Bridging Energy Assets and Digital Finance</title>
+    <script src="https://cdn.tailwindcss.com"></script>
+    <style>
+        body {
+            font-family: -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+        .hero-bg {
+            background: linear-gradient(to bottom, rgba(0,0,0,0.7), rgba(0,0,0,0.3)), url('https://via.placeholder.com/1920x1080?text=Hero+Image');
+            background-size: cover;
+            background-position: center;
+        }
+        .section-bg {
+            background: linear-gradient(135deg, #1e3a8a, #3b82f6);
+        }
+        .smooth-scroll {
+            scroll-behavior: smooth;
+        }
+    </style>
+</head>
+<body class="bg-gray-900 text-white smooth-scroll">
+    <!-- Navigation -->
+    <nav class="fixed top-0 w-full bg-black bg-opacity-80 backdrop-blur-md z-50">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 py-4 flex justify-between items-center">
+            <div class="flex items-center">
+                <img src="logo.png" alt="OptiNexus Logo" class="h-10">
+            </div>
+            <div class="space-x-8">
+                <a href="#home" class="hover:text-blue-400 transition">Home</a>
+                <a href="#about" class="hover:text-blue-400 transition">About Us</a>
+                <a href="#products" class="hover:text-blue-400 transition">Products & Services</a>
+                <a href="#news" class="hover:text-blue-400 transition">News</a>
+                <a href="#contact" class="hover:text-blue-400 transition">Contact Us</a>
+            </div>
+        </div>
+    </nav>
+
+    <!-- Home Section -->
+    <section id="home" class="hero-bg h-screen flex items-center justify-center">
+        <div class="text-center max-w-4xl mx-auto px-4">
+            <h1 class="text-5xl md:text-7xl font-bold mb-6">OptiNexus</h1>
+            <p class="text-xl md:text-2xl mb-8">Bridging energy assets and digital finance, reshaping global value flow with AI and blockchain</p>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-6">
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold">AI Valuation Engine</h3>
+                    <p>Dynamic pricing for energy assets</p>
+                </div>
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold">Blockchain Authentication</h3>
+                    <p>Asset mapping + smart contracts</p>
+                </div>
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold">EnergyCoin System</h3>
+                    <p>Stable anchoring + cross-border settlement</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- About Us Section -->
+    <section id="about" class="py-20 section-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">About Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Our Team</h3>
+                    <p>OptiNexus was founded by an interdisciplinary international team with expertise in artificial intelligence, fintech, energy economics, and international policy. Our founder and CEO was nominated as a candidate for "National Science and Technology Leader," bringing global vision and practical experience.</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Our Vision</h3>
+                    <p>Through the "EnergyCoin" digital asset, we aim to enable fair, transparent, and efficient value circulation for resource-rich countries, promoting the sustainable development of global green energy finance.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Products & Services Section -->
+    <section id="products" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">Products & Services</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-8">
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">Customized Digital Asset Design</h3>
+                    <p>Providing tailored digital solutions for energy assets.</p>
+                </div>
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">Cross-Border Energy Trading Integration</h3>
+                    <p>Seamless integration with global energy trading platforms to optimize cross-border transactions.</p>
+                </div>
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">Government & Regulatory Compliance Consulting</h3>
+                    <p>Offering compliance consulting to meet international and regional regulations.</p>
+                </div>
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">Blockchain + AI Integrated Solutions</h3>
+                    <p>Combining AI and blockchain for efficient and secure energy trading solutions.</p>
+                </div>
+            </div>
+            <div class="mt-12 text-center">
+                <h3 class="text-2xl font-semibold mb-4">Core Products</h3>
+                <p class="max-w-3xl mx-auto">The AI Energy Asset Valuation System uses big data and machine learning to assess the market value of oil, natural gas, and hydrogen in real-time; the Blockchain Authentication System maps physical energy assets to digital assets under the RWA framework; and the EnergyCoin Settlement and Payment Engine issues energy-backed stablecoins for cross-border energy settlements.</p>
+            </div>
+        </div>
+    </section>
+
+    <!-- News Section -->
+    <section id="news" class="py-20 section-bg">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">News</h2>
+            <div class="grid grid-cols-1 md:grid-cols-3 gap-8">
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">Company Founded</h3>
+                    <p>In 2025, OptiNexus was established, dedicated to innovating the fusion of energy and blockchain.</p>
+                </div>
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">Technological Breakthrough</h3>
+                    <p>The AI Valuation Engine successfully completed initial dynamic pricing tests for energy assets.</p>
+                </div>
+                <div class="p-6 bg-black bg-opacity-50 rounded-lg">
+                    <h3 class="text-xl font-semibold mb-4">Industry Partnership</h3>
+                    <p>Formed a strategic partnership with UAE energy companies to advance blockchain applications.</p>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Contact Us Section -->
+    <section id="contact" class="py-20 bg-gray-800">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8">
+            <h2 class="text-4xl font-bold text-center mb-12">Contact Us</h2>
+            <div class="grid grid-cols-1 md:grid-cols-2 gap-12">
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Contact Information</h3>
+                    <p>Email: aioptinexus@gmail.com</p>
+                    <p>Address: Cayman Islands</p>
+                </div>
+                <div>
+                    <h3 class="text-2xl font-semibold mb-4">Map</h3>
+                    <div class="h-64 bg-gray-600 rounded-lg flex items-center justify-center">
+                        <p>Embed Google Maps here (please replace with actual map iframe code)</p>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </section>
+
+    <!-- Footer -->
+    <footer class="bg-black py-6">
+        <div class="max-w-7xl mx-auto px-4 sm:px-6 lg:px-8 text-center">
+            <p>&copy; 2025 OptiNexus. All rights reserved.</p>
+        </div>
+    </footer>
+
+    <script>
+        // Smooth scroll for nav links
+        document.querySelectorAll('a[href^="#"]').forEach(anchor => {
+            anchor.addEventListener('click', function(e) {
+                e.preventDefault();
+                document.querySelector(this.getAttribute('href')).scrollIntoView({
+                    behavior: 'smooth'
+                });
+            });
+        });
+    </script>
+</body>
+</html>
